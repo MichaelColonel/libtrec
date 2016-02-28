@@ -1,0 +1,11 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+includedir=${prefix}/include
+libdir= ${exec_prefix}/@PROJECT_PKG_CONFIG_LIBDIR@
+
+Name: trec
+Description: Track Reconstruction library
+Version: @PROJECT_VERSION_MAJOR@.@PROJECT_VERSION_MINOR@.@PROJECT_VERSION_PATCH@
+Cflags: -I${includedir}/libtrec
+Libs: -L${libdir} -ltrec
+#Libs.private: -L${libdir} -lm -lccm
