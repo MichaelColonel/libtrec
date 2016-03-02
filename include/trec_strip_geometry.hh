@@ -19,6 +19,9 @@
 
 #pragma once
 
+#include <string>
+#include <map>
+
 #include "trec_defines.hh"
 
 namespace TREC {
@@ -36,10 +39,38 @@ enum StripGeometryType {
 	MSD__V
 };
 
+struct StripGeometry;
+struct StripGeometryNames;
+
+typedef std::pair< StripGeometry, StripGeometryNames> StripGeometryPair;
+typedef std::map< StripGeometryType, StripGeometryNames> StripNamesMap;
+typedef std::map< StripGeometryType, StripGeometryPair> StripGeometryMap;
+
+// Micro strips detector plane geometry names for Geant4
+struct StripGeometryNames {
+	// mass geometry names
+	std::string body_name;
+	std::string logical_name;
+	std::string physical_name;
+	// parallel world names
+	std::string parallel_body_name;
+	std::string parallel_logical_name;
+	std::string parallel_physical_name;
+	std::string body_devision_name;
+	std::string logical_devision_name; // logical_sensitive_name
+	std::string physical_devision_name;
+//	std::string logical_sensitive_name;
+	std::string functional_detector_name;
+	std::string sensitive_detector_name;
+};
+
 // Micro strips detector plane geometry parameters
 const struct StripGeometry {
 	static int index(StripGeometryType); // get plane index from type
 	static StripGeometryType index(int); // get plane type from index
+	static StripGeometryMap create();
+	static StripGeometryNames create(StripGeometryType);
+	static StripNamesMap create_names();
 	static const StripGeometry* get(StripGeometryType);
 	static void load(const char* filename);
 
