@@ -71,6 +71,22 @@ StripGeometry::get(StripGeometryType type)
 	return geom;
 }
 
+StripGeometryMap
+StripGeometry::create()
+{
+	StripGeometryMap map;
+	
+	map[MSD_Y1] = StripGeometryPair( strip_geometry_[0], create(MSD_Y1));
+	map[MSD_X1] = StripGeometryPair( strip_geometry_[1], create(MSD_X1));
+	map[MSD_Y2] = StripGeometryPair( strip_geometry_[2], create(MSD_Y2));
+	map[MSD_X2] = StripGeometryPair( strip_geometry_[3], create(MSD_X2));
+	map[MSD_Y3] = StripGeometryPair( strip_geometry_[4], create(MSD_Y3));
+	map[MSD_X3] = StripGeometryPair( strip_geometry_[5], create(MSD_X3));
+	map[MSD__U] = StripGeometryPair( strip_geometry_[6], create(MSD__U));
+	map[MSD__V] = StripGeometryPair( strip_geometry_[7], create(MSD__V));
+
+	return map;
+}
 
 StripNamesMap
 StripGeometry::create_names()
