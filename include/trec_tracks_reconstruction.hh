@@ -91,10 +91,8 @@ private:
 	TH1I* object_slice_;
 	TH2D* clear_position_;
 	TH2D* object_position_;
-	TH1D* object_position_profile_;
 	TH2D* clear_fluence_;
 	TH2D* object_fluence_;
-	TH1D* object_fluence_profile_;
 	TH2D* clear_weight_;
 	TH2D* object_weight_;
 	int clear_pos_min_;
@@ -121,9 +119,7 @@ TracksReconstruction::TracksReconstruction( const MainTracksVector& main,
 	object_slice_(0),
 	clear_position_(0),
 	object_position_(0),
-	object_position_profile_(0),
 	clear_fluence_(0),
-	object_fluence_profile_(0),
 	clear_weight_(0),
 	object_weight_(0),
 	clear_pos_min_(-1),

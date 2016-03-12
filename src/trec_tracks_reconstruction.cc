@@ -38,9 +38,7 @@ TracksReconstruction::~TracksReconstruction()
 
 	if (object_slice_) delete object_slice_;
 	if (object_fluence_) delete object_fluence_;
-	if (object_fluence_profile_) delete object_fluence_profile_;
 	if (object_position_) delete object_position_;
-	if (object_position_profile_) delete object_position_profile_;
 	if (object_weight_) delete object_weight_;
 }
 
@@ -123,14 +121,10 @@ TracksReconstruction::form_object_tracks_data(
 	object_fluence_ = new TH2D( "fluence_object", "Fluence",
 		bin_x, size_x1, size_x2, bin_y, size_y1, size_y2);
 
-	object_fluence_profile_ = new TH1D( "fluence_object_profile", "Profile",
-		bin_x, size_x1, size_x2);
 
 	object_position_ = new TH2D( "position_object", "Position",
 		bin_x, size_x1, size_x2, bin_y, size_y1, size_y2);
 
-	object_position_profile_ = new TH1D( "position_object_profile", "Profile",
-		bin_x, size_x1, size_x2);
 
 	object_weight_ = new TH2D( "weight_object", "Weight",
 		bin_x, size_x1, size_x2, bin_y, size_y1, size_y2);
@@ -159,10 +153,8 @@ TracksReconstruction::form_object_tracks_data(
 
 //		int pos = clear_pos_max_ - position;
 		double pos = conf->PSET(position);
-		object_position_profile_->Fill( fx, pos);
 		object_position_->Fill( fx, fy, pos);
 		object_fluence_->Fill( fx, fy);
-		object_fluence_profile_->Fill(fx);
 		object_weight_->Fill( fx, fy, w);
 	}
 
@@ -186,18 +178,12 @@ TracksReconstruction::reconstruct( int object_slice_min,
 	for ( int i = 1; i <= object_fluence_->GetNbinsX(); ++i) {
 		for ( int j = 1; j <= object_fluence_->GetNbinsY(); ++j) {
 			p = object_position_->GetBinContent( i, j);
+			pe = object_position_->GetBinError( i, j);
 			f = object_fluence_->GetBinContent( i, j);
 
 			object_position_->SetBinContent( i, j, p / f);
+			object_position_->SetBinError( i, j, pe / f);
 		}
-	}
-
-	for ( int i = 1; i <= object_fluence_profile_->GetNbinsX(); ++i) {
-		p = object_position_profile_->GetBinContent(i);
-		pe = object_position_profile_->GetBinError(i);
-		f = object_fluence_profile_->GetBinContent(i);
-		object_position_profile_->SetBinContent( i, p / f);
-		object_position_profile_->SetBinError( i, pe / f);
 	}
 
 	object_pos_min_ = tmp_obj_min; // restore
@@ -211,9 +197,7 @@ TracksReconstruction::save(const char* filename) const
 	TFile* file = new TFile( filename, "RECREATE");
 
 	object_position_->Write();
-	object_position_profile_->Write();
 	object_fluence_->Write();
-	object_fluence_profile_->Write();
 	object_slice_->Write();
 	object_weight_->Write();
 	file->Close();
