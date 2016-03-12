@@ -30,9 +30,9 @@ namespace {
 const std::pair< bool, bool> pair_ok( true, true);
 
 // one-strip cluster sigma^2 = pitch^2 / 12
-const double sigma_xy1 = 57.735; // sigma on 1 module (Y1-X1 planes) in (um) 
-const double sigma_xy2 = 94.0; // sigma on 2 module (Y2-X2 planes) in (um) 
-const double sigma_xy3 = 1000.0; // sigma on 3 module (Y3-X3 planes) in (um) 
+const double sigma_xy1 = 57.735 * CLHEP::um; // sigma on 1 module (Y1-X1 planes) in (um) 
+const double sigma_xy2 = 94.0 * CLHEP::um; // sigma on 2 module (Y2-X2 planes) in (um) 
+const double sigma_xy3 = 1000.0 * CLHEP::um; // sigma on 3 module (Y3-X3 planes) in (um) 
 
 } // namespace
 
@@ -81,19 +81,19 @@ TrackCoordinates::find_coordinate( StripGeometryType type,
 		if (end == plane_hits.begin()) {
 			// one strip cluster
 			unsigned int pos = std::distance( plane_hits.begin(), begin);
-			v = -(geom->x * CLHEP::um) // half on detector size
-				+ pos * (geom->pitch * CLHEP::um) // strips shift
-				+ (geom->pitch * CLHEP::um / 2.0) // half strip offset
-				+ (geom->dx * CLHEP::um); // detector offset
+			v = -geom->x // half on detector size
+				+ pos * geom->pitch // strips shift
+				+ geom->pitch / 2.0 // half strip offset
+				+ geom->dx; // detector offset
 		}
 		else {
 			// one multistrip cluster
 			for ( it = begin; it != end; ++it) {
 				unsigned int pos = std::distance( plane_hits.begin(), it);
-				v += -(geom->x * CLHEP::um) // half on detector size
-					+ pos * (geom->pitch * CLHEP::um) // strips shift
-					+ (geom->pitch * CLHEP::um / 2.0) // half strip offset
-					+ (geom->dx * CLHEP::um); // detector offset
+				v += -geom->x // half on detector size
+					+ pos * geom->pitch // strips shift
+					+ geom->pitch / 2.0 // half strip offset
+					+ geom->dx; // detector offset
 			}
 			v /= std::distance( begin, end);
 		}
@@ -256,14 +256,14 @@ TrackCoordinates::calculate_main_track(bool axis)
 	if (axis) { // x coordinate (um)
 		f1 = StripGeometry::get(MSD_X1);
 		f2 = StripGeometry::get(MSD_X2);
-		f[0] = xy1_.first / CLHEP::um;
-		f[1] = xy2_.first / CLHEP::um;
+		f[0] = xy1_.first;
+		f[1] = xy2_.first;
 	}
 	else { // y coordinate (um)
 		f1 = StripGeometry::get(MSD_Y1);
 		f2 = StripGeometry::get(MSD_Y2);
-		f[0] = xy1_.second / CLHEP::um;
-		f[1] = xy2_.second / CLHEP::um;
+		f[0] = xy1_.second;
+		f[1] = xy2_.second;
 	}
 
 	if (f1 && f2) {
@@ -278,6 +278,31 @@ TrackCoordinates::calculate_main_track(bool axis)
 		else // YOZ axis: y coordinate
 			main_y = Track( a, b);
 	}
+}
+
+double
+TrackCoordinates::multistrip_cluster_coordinate(
+	StripGeometryType type,
+	const HitsVector& plane_hits,
+	HitsVector::const_iterator& begin,
+	HitsVector::const_iterator& end)
+{
+	// one multistrip cluster
+
+	double v = 0;
+
+	const StripGeometry* geom = StripGeometry::get(type);
+
+	for ( HitsVector::const_iterator it = begin; it != end; ++it) {
+		unsigned int pos = std::distance( plane_hits.begin(), it);
+		v += -geom->x // half on detector size
+			+ pos * geom->pitch // strips shift
+			+ geom->pitch / 2.0 // half strip offset
+			+ geom->dx; // detector offset
+	}
+	v /= std::distance( begin, end);
+	
+	return v;
 }
 
 void
@@ -297,17 +322,17 @@ TrackCoordinates::calculate_full_track(bool axis)
 		f1 = StripGeometry::get(MSD_X1);
 		f2 = StripGeometry::get(MSD_X2);
 		f3 = StripGeometry::get(MSD_X3);
-		f[0] = xy1_.first / CLHEP::um;
-		f[1] = xy2_.first / CLHEP::um;
-		f[2] = xy3_.first / CLHEP::um;
+		f[0] = xy1_.first;
+		f[1] = xy2_.first;
+		f[2] = xy3_.first;
 	}
 	else { // y coordinate (um)
 		f1 = StripGeometry::get(MSD_Y1);
 		f2 = StripGeometry::get(MSD_Y2);
 		f3 = StripGeometry::get(MSD_Y3);
-		f[0] = xy1_.second / CLHEP::um;
-		f[1] = xy2_.second / CLHEP::um;
-		f[2] = xy3_.second / CLHEP::um;
+		f[0] = xy1_.second;
+		f[1] = xy2_.second;
+		f[2] = xy3_.second;
 	}
 	
 	if (f1 && f2 && f3) {
@@ -337,8 +362,8 @@ TrackCoordinates::check_tracks_within_trajectory() const
 	double main_y3 = main_y.fit(y3->z);
 
 	// x, y positions in plane XY3 by hit (um)
-	double mx3 = xy3_.first / CLHEP::um;
-	double my3 = xy3_.second / CLHEP::um;
+	double mx3 = xy3_.first;
+	double my3 = xy3_.second;
 	
 	double dist_x3 = sqrt( (mx3 - main_x3) * (mx3 - main_x3) +
 		(my3 - main_y3) * (my3 - main_y3));
