@@ -38,7 +38,7 @@ public:
 	/** Copy constructor
 	 */	
 	TrackCoordinates(const TrackCoordinates& src);
-	/** Assign operator
+	/** Assignment operator
 	 */	
 	TrackCoordinates& operator=(const TrackCoordinates& src);
 

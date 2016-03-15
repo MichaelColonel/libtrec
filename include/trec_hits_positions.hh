@@ -59,9 +59,10 @@ public:
 	 */
 	HitsPositions(const HitsPositions& src);
 	virtual ~HitsPositions();
-	/** Assign operator
+	/** Assignment operator
 	 */
 	HitsPositions& operator=(const HitsPositions& src);
+	
 	bool operator==(const HitsPositions& src) const;
 	bool operator<(const HitsPositions& src) const;
 
@@ -88,12 +89,16 @@ public:
 	int calorimeter_position() const;
 
 	/** Save vector of HitsPositions into file
+	 * @param filename - name of the file
+	 * @param hits - vector of HitsPositions
 	 */
-	static void save( const char* filename, const HitsPositionsVector&);
+	static void save( const char* filename, const HitsPositionsVector& hits);
 
 	/** Load vector of HitsPositions from file
+	 * @param filename - name of the file
+	 * @param hits - vector of HitsPositions
 	 */
-	static void load( const char* filename, HitsPositionsVector&);
+	static void load( const char* filename, HitsPositionsVector& hits);
 
 private:
 	/** Transform plane hits position indexes to hits vector

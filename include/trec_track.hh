@@ -31,27 +31,84 @@ typedef std::pair< TrackXYPair, int > TracksPositionPair;
 typedef std::vector<TrackXYPair> MainTracksVector;
 typedef std::vector<TracksPositionPair> FullTracksVector;
 
+/** Class Track stores fit parameter of the current track.
+ * For X0Z and Y0Z projections the track uses least square line fitting.
+ * 
+ * Y0Z: y = a1 * z + b1
+ * X0Z: x = a2 * z + b2
+ */
 class Track {
 	
 friend std::ostream& operator<<( std::ostream&, const Track&);
 friend std::istream& operator>>( std::istream&, Track&);
 
 public:
+	/** Constructor
+	 */
 	Track( double aa = 0.0, double bb = 0.0, double cov00 = 0.0,
 		double cov01 = 0.0, double cov11 = 0.0); // GSL
+	
+	/** Copy constructor
+	 */
 	Track(const Track& src);
 	virtual ~Track();
+	
+	/** Assignment operator
+	 */
 	Track& operator=(const Track& src);
 	bool operator==(const Track& src) const;
 	bool operator<(const Track& src) const;
-
+	
+	/** Method returns "a" parameter of line fitting
+	 * @return "a" parameter
+	 */
 	double a() const { return a_; }
+	
+	/** Method returns "b" parameter of line fitting
+	 * @return "b" parameter
+	 */
 	double b() const { return b_; }
+	
+	/** Method returns fitted X-axis or Y-axis coordinates of Z-axis position
+	 * 
+	 * @param z - Z-axis position
+	 * @return X-axis or Y-axis coordinates
+	 */
 	double fit(double z) const; // GSL
+	
+	/** Checks if the track is empty
+	 * @return <tt>true</tt> if empty, <tt>false</tt> otherwise.
+	 */
 	bool empty() const;
+
+	/** Method returns fitted X-axis or Y-axis
+	 * coordinate and error of Z-axis position.
+	 * 
+	 * @param z - Z-axis position
+	 * @return X-axis or Y-axis coordinate and error value as a pair
+	 * pair.first - coordinate
+	 * pair.second - error
+	 */
 	std::pair< double, double> fit_error(double z) const; // GSL
 
+	/** Create Track object from Z-axis and X-axis or Y-axis coordinates.
+	 * 
+	 * @param z - Z-axis coordinates array
+	 * @param f - X-axis or Y-axis coordinates array
+	 * @param n - number of points in array
+	 * @return Track object
+	 */
 	static Track create( double* z, double* f, int n);
+
+	/** Create Track object from Z-axis and X-axis or Y-axis coordinates
+	 * with weight.
+	 * 
+	 * @param z - Z-axis coordinates array
+	 * @param f - X-axis or Y-axis coordinates array
+	 * @param w - weights array
+	 * @param n - number of points in array
+	 * @return Track object
+	 */
 	static Track create( double* z, double* f, double* w, int n);
 private:
 	double a_;
