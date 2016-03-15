@@ -24,9 +24,12 @@
 
 #include "trec_defines.hh"
 
+#include <G4SystemOfUnits.hh>
+
 namespace TREC {
 
-// Micro strips detector plane type
+/** Micro strips detector plane type
+ */
 enum StripGeometryType {
 	MSD_ER, // error - no plane
 	MSD_Y1,
@@ -46,7 +49,8 @@ typedef std::pair< StripGeometry, StripGeometryNames> StripGeometryPair;
 typedef std::map< StripGeometryType, StripGeometryNames> StripNamesMap;
 typedef std::map< StripGeometryType, StripGeometryPair> StripGeometryMap;
 
-// Micro strips detector plane geometry names for Geant4
+/** Micro strips detector plane geometry names for Geant4
+ */
 struct StripGeometryNames {
 	// mass geometry names
 	std::string body_name;
@@ -64,7 +68,8 @@ struct StripGeometryNames {
 	std::string sensitive_detector_name;
 };
 
-// Micro strips detector plane geometry parameters
+/** Micro strips detector plane geometry parameters
+ */
 const struct StripGeometry {
 	static int index(StripGeometryType); // get plane index from type
 	static StripGeometryType index(int); // get plane type from index
@@ -74,26 +79,26 @@ const struct StripGeometry {
 	static const StripGeometry* get(StripGeometryType);
 	static void load(const char* filename);
 
-	double z; // position z (um)
+	double z; // position z (mm)
 	double angle; // angle of the detector (degree)
 	double offset; // pitch offset (um) -- reserved
 	double angle_diff; // angle corrections (degree) -- reserved
 	double phi_diff; // reserved
 	double sigma; // sigma multiple scattering + alingment (um) -- reserved
 	double t; // detector thickness (um)
-	double x; // half size of square detector (um)
+	double x; // half size of square detector (mm)
 	int strips; // number of strips
 	double pitch; // pitch size (um)
 	double dx; // detector offset (um) -- reserved
 } strip_geometry_[TREC_NUMBER_OF_SILICON_DETECTORS] = {
-	{  -52000., 180.0, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. },
-	{  -50000.,  90.0, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. },
-	{  298000., 180.0, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. },
-	{  300000.,  90.0, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. },
-	{ 1300000., 180.0, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. },
-	{ 1302000.,  90.0, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. },
-	{ 1320000., -10.5, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. },
-	{ 1322000.,  10.5, 0.0, 0.0, 0.0, 0.0, 300., 30000., 300, 200., 0. }
+	{  -52. * CLHEP::mm, 180.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
+	{  -50. * CLHEP::mm,  90.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
+	{  298. * CLHEP::mm, 180.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
+	{  300. * CLHEP::mm,  90.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
+	{ 1300. * CLHEP::mm, 180.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
+	{ 1302. * CLHEP::mm,  90.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
+	{ 1320. * CLHEP::mm, -10.5 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
+	{ 1322. * CLHEP::mm,  10.5 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. }
 };
 
 inline

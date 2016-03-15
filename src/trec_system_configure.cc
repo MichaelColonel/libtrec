@@ -163,6 +163,7 @@ SystemConfigure::PSET(int slice) const
 	double dx2 = (slice - slice_clear) /  material_position_[1]; // cm
 	
 	return dx2;
+//	return dx1;
 }
 
 void
