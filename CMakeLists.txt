@@ -38,7 +38,7 @@ file(GLOB sources
 	${PROJECT_SOURCE_DIR}/src/*.c)
 file(GLOB headers
 	${PROJECT_SOURCE_DIR}/include/*.hh
-	${PROJECT_SOURCE_DIR}/include/*.h])
+	${PROJECT_SOURCE_DIR}/include/*.h)
 
 #----------------------------------------------------------------------------
 # Add the library, and link it to the Geant4 libraries
@@ -54,7 +54,7 @@ include_directories(${ROOT_INCLUDE_DIR})
 target_link_libraries(trec ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 
 #----------------------------------------------------------------------------
-# Gnu Scientific Library - GSL  
+# Gnu Scientific Library - GSL // CCMATH library
 #----------------------------------------------------------------------------
 find_package(PkgConfig)
 pkg_check_modules(GSL REQUIRED gsl)
