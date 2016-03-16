@@ -21,6 +21,7 @@
 
 #include <gsl/gsl_fit.h>
 
+#include "trec_ccmath.h"
 #include "trec_track.hh"
 
 namespace TREC {
@@ -35,11 +36,43 @@ Track::create( double* z, double* f, double* w, int n)
 	return Track( c1, c0, cov00, cov01, cov11);
 }
 
+Track
+Track::create( double* z, double* f, int n)
+{
+	int id;
+	const int fit = 2;
+	double* tmp = new double[n * fit];
+	double* ff = new double[n];
+
+	for ( int i = 0; i < n; ++i) {
+		ff[i] = f[i]; // just copy
+
+//		for ( int j = 0; j < fit; ++j)
+//			tmp[i * fit + j] = pow( z[i], j);
+
+		tmp[i * fit] = 1.0;
+		tmp[i * fit + 1] = z[i];
+	}
+
+	/* double t = */ ccm_qrlsq( tmp, ff, n, fit, &id);
+
+	Track res = (id == -1) ? Track( 0.0, 0.0) : Track( ff[1], ff[0]);
+
+	delete [] tmp;
+	delete [] ff;
+	
+	return res;
+}
+
 double
 Track::fit(double z) const
 {
-	double v, v_err;
-	gsl_fit_linear_est( z, b_, a_, cov00_, cov01_, cov11_, &v, &v_err);
+	double v = 0.0, v_err = 0.0;
+
+	if (track_with_errors_)
+		gsl_fit_linear_est( z, b_, a_, cov00_, cov01_, cov11_, &v, &v_err);
+	else
+		v = a_ * z + b_;
 
 	return v;
 }
@@ -47,8 +80,12 @@ Track::fit(double z) const
 std::pair< double, double>
 Track::fit_error(double z) const
 {
-	double v, v_err;
-	gsl_fit_linear_est( z, b_, a_, cov00_, cov01_, cov11_, &v, &v_err);
+	double v = 0.0, v_err = 0.0;
+
+	if (track_with_errors_)
+		gsl_fit_linear_est( z, b_, a_, cov00_, cov01_, cov11_, &v, &v_err);
+	else
+		v = a_ * z + b_;
 
 	return std::make_pair( v, v_err);
 }
@@ -61,6 +98,7 @@ operator<<( std::ostream& s, const Track& obj)
 	s.write( (char *)&obj.cov00_, sizeof(double));
 	s.write( (char *)&obj.cov01_, sizeof(double));
 	s.write( (char *)&obj.cov11_, sizeof(double));
+	s.write( (char *)&obj.track_with_errors_, sizeof(bool));
 
 	return s;
 }
@@ -73,6 +111,7 @@ operator>>( std::istream& s, Track& obj)
 	s.read( (char *)&obj.cov00_, sizeof(double));
 	s.read( (char *)&obj.cov01_, sizeof(double));
 	s.read( (char *)&obj.cov11_, sizeof(double));
+	s.read( (char *)&obj.track_with_errors_, sizeof(bool));
 
 	return s;
 }

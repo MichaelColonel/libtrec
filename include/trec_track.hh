@@ -45,9 +45,9 @@ friend std::istream& operator>>( std::istream&, Track&);
 public:
 	/** Constructor
 	 */
-	Track( double aa = 0.0, double bb = 0.0, double cov00 = 0.0,
-		double cov01 = 0.0, double cov11 = 0.0); // GSL
-	
+	Track( double a, double b, double cov00, double cov01, double cov11); // GSL
+	Track( double a = 0.0, double b = 0.0); // CCMATH
+
 	/** Copy constructor
 	 */
 	Track(const Track& src);
@@ -113,20 +113,34 @@ public:
 private:
 	double a_;
 	double b_;
-	double cov00_; // parameter 1
-	double cov01_; // parameter 2
-	double cov11_; // parameter 3
+	double cov00_; // covariance matrix parameter 1
+	double cov01_; // covariance matrix parameter 2
+	double cov11_; // covariance matrix parameter 3
+	bool track_with_errors_;
 };
 
 inline
-Track::Track( double aa, double bb, double cov00,
+Track::Track( double a, double b, double cov00,
 	double cov01, double cov11)
 	:
-	a_(aa),
-	b_(bb),
+	a_(a),
+	b_(b),
 	cov00_(cov00),
 	cov01_(cov01),
-	cov11_(cov11)
+	cov11_(cov11),
+	track_with_errors_(true)
+{
+}
+
+inline
+Track::Track( double a, double b)
+	:
+	a_(a),
+	b_(b),
+	cov00_(0.0),
+	cov01_(0.0),
+	cov11_(0.0),
+	track_with_errors_(false)
 {
 }
 
@@ -137,7 +151,8 @@ Track::Track(const Track& src)
 	b_(src.b_),
 	cov00_(src.cov00_),
 	cov01_(src.cov01_),
-	cov11_(src.cov11_)
+	cov11_(src.cov11_),
+	track_with_errors_(src.track_with_errors_)
 {
 } 
 
@@ -155,6 +170,7 @@ Track::operator=(const Track& src)
 	cov00_ = src.cov00_;
 	cov01_ = src.cov01_;
 	cov11_ = src.cov11_;
+	track_with_errors_ = src.track_with_errors_;
 	return *this;
 }
 
@@ -167,8 +183,9 @@ Track::operator==(const Track& src) const
 	bool a3 = (cov00_ == src.cov00_);
 	bool a4 = (cov01_ == src.cov01_);
 	bool a5 = (cov11_ == src.cov11_);
+	bool a6 = (track_with_errors_ == src.track_with_errors_);
 	bool b1 = (a1 && a2 && a3);
-	bool b2 = (a4 && a5);
+	bool b2 = (a4 && a5 && a6);
 	return (b1 && b2);
 }
 
