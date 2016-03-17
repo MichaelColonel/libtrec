@@ -45,8 +45,8 @@ friend std::istream& operator>>( std::istream&, Track&);
 public:
 	/** Constructor
 	 */
-	Track( double a, double b, double cov00, double cov01, double cov11); // GSL
-	Track( double a = 0.0, double b = 0.0); // CCMATH
+	Track( double aa, double bb, double cov00, double cov01, double cov11); // GSL
+	Track( double aa = 0.0, double bb = 0.0); // CCMATH
 
 	/** Copy constructor
 	 */
@@ -120,11 +120,11 @@ private:
 };
 
 inline
-Track::Track( double a, double b, double cov00,
+Track::Track( double aa, double bb, double cov00,
 	double cov01, double cov11)
 	:
-	a_(a),
-	b_(b),
+	a_(aa),
+	b_(bb),
 	cov00_(cov00),
 	cov01_(cov01),
 	cov11_(cov11),
@@ -133,10 +133,10 @@ Track::Track( double a, double b, double cov00,
 }
 
 inline
-Track::Track( double a, double b)
+Track::Track( double aa, double bb)
 	:
-	a_(a),
-	b_(b),
+	a_(aa),
+	b_(bb),
 	cov00_(0.0),
 	cov01_(0.0),
 	cov11_(0.0),
