@@ -7,7 +7,7 @@ project(TREC)
 find_package(Geant4 REQUIRED)
 
 if(UNIX)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=gnu++0x")
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -std=c++11")
 endif()
 
 #----------------------------------------------------------------------------
@@ -24,9 +24,9 @@ set(PROJECT_VERSION_PATCH 1)
 
 # Define arch
 if(CMAKE_SIZEOF_VOID_P EQUAL 8) 
-    set(PROJECT_ARCH_64 TRUE)
+	set(PROJECT_ARCH_64 TRUE)
 else() 
-    set(PROJECT_ARCH_64 FALSE) 
+	set(PROJECT_ARCH_64 FALSE) 
 endif()
 
 #----------------------------------------------------------------------------
@@ -59,9 +59,9 @@ target_link_libraries(trec ${Geant4_LIBRARIES} ${ROOT_LIBRARIES})
 find_package(PkgConfig)
 pkg_check_modules(GSL REQUIRED gsl)
 if(GSL_FOUND)
- include_directories(${GSL_INCLUDE_DIR})
- target_link_libraries(trec ${GSL_LIBRARIES})
- target_link_libraries(trec "-lccm")
+	include_directories(${GSL_INCLUDE_DIR})
+	target_link_libraries(trec ${GSL_LIBRARIES})
+	target_link_libraries(trec "-lccm")
 endif()
 
 #----------------------------------------------------------------------------
@@ -74,11 +74,10 @@ else()
 	set(PROJECT_PKG_CONFIG_LIBDIR "lib")
 endif()
 
-configure_file (
-     ${PROJECT_SOURCE_DIR}/trec.pc.in
-     ${PROJECT_SOURCE_DIR}/trec.pc
-     @ONLY
-  )
+configure_file(
+	${PROJECT_SOURCE_DIR}/trec.pc.in
+	${PROJECT_SOURCE_DIR}/trec.pc
+	@ONLY)
 
 #----------------------------------------------------------------------------
 # Copy all scripts to the build directory, i.e. the directory in which we
@@ -86,16 +85,14 @@ configure_file (
 # directly because it relies on these scripts being in the current
 # working directory.
 #----------------------------------------------------------------------------
-set(TREC_SCRIPTS
-  trec.pc
-  )
+set(TREC_SCRIPTS trec.pc)
 
 foreach(_script ${TREC_SCRIPTS})
-  configure_file(
-    ${PROJECT_SOURCE_DIR}/${_script}
-    ${PROJECT_BINARY_DIR}/${_script}
-    COPYONLY
-    )
+	configure_file(
+		${PROJECT_SOURCE_DIR}/${_script}
+		${PROJECT_BINARY_DIR}/${_script}
+		COPYONLY
+	)
 endforeach()
 
 #----------------------------------------------------------------------------
