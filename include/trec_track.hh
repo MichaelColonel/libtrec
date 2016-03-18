@@ -113,9 +113,9 @@ public:
 private:
 	double a_;
 	double b_;
-	double cov00_; // covariance matrix parameter 1
-	double cov01_; // covariance matrix parameter 2
-	double cov11_; // covariance matrix parameter 3
+	double cov00_; /// covariance matrix parameter 1
+	double cov01_; /// covariance matrix parameter 2
+	double cov11_; /// covariance matrix parameter 3
 	bool track_with_errors_;
 };
 
@@ -171,6 +171,7 @@ Track::operator=(const Track& src)
 	cov01_ = src.cov01_;
 	cov11_ = src.cov11_;
 	track_with_errors_ = src.track_with_errors_;
+
 	return *this;
 }
 
@@ -186,6 +187,7 @@ Track::operator==(const Track& src) const
 	bool a6 = (track_with_errors_ == src.track_with_errors_);
 	bool b1 = (a1 && a2 && a3);
 	bool b2 = (a4 && a5 && a6);
+
 	return (b1 && b2);
 }
 
@@ -210,6 +212,7 @@ Track::empty() const
 	bool a5 = (cov11_ == 0.0);
 	bool b1 = (a1 && a2 && a3);
 	bool b2 = (a4 && a5);
+
 	return (b1 && b2);
 }
 
