@@ -23,6 +23,10 @@
 extern "C" {
 #endif /* __cplusplus */
 
+/** Wrapper to CCMATH library functions.
+ * 
+ * See C04-cfit library manual for more details.
+ */
 void ccm_cspl( double *, double *, double *, int, double);
 double ccm_splfit( double, double *, double *, double *, int, double);
 double ccm_qrlsq( double *, double *, int, int, int *);

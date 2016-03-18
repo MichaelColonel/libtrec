@@ -90,7 +90,7 @@ const struct StripGeometry {
 	int strips; // number of strips
 	double pitch; // pitch size (um)
 	double dx; // detector offset (um) -- reserved
-} strip_geometry_[TREC_NUMBER_OF_SILICON_DETECTORS] = {
+} strip_geometry_[] = {
 	{  -52. * CLHEP::mm, 180.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
 	{  -50. * CLHEP::mm,  90.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
 	{  298. * CLHEP::mm, 180.0 * CLHEP::deg, 0.0, 0.0, 0.0, 0.0, 300. * CLHEP::um, 30. * CLHEP::mm, 300, 200. * CLHEP::um, 0. },
